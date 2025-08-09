@@ -1,0 +1,273 @@
+%-------------------------
+% Resume in Latex
+% Author : Abhinav Uppala
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{graphicx} 
+\usepackage[utf8]{inputenc}
+\input{glyphtounicode}
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING----------
+% \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+%   \textbf{\href{http://sourabhbajaj.com/}{\Large Sourabh Bajaj}} & Email : \href{mailto:sourabh@sourabhbajaj.com}{sourabh@sourabhbajaj.com}\\
+%   \href{http://sourabhbajaj.com/}{http://www.sourabhbajaj.com} & Mobile : +1-123-456-7890 \\
+% \end{tabular*}
+
+% ------ARROW HYPERLINK COMMAND------
+
+
+%-----------HEADING-----------
+\begin{center}
+    \textbf{\Huge \scshape Abhinav Uppala} \\ \vspace{4pt}
+    \small 916-836-7880 $|$ \href{mailto:abhinav.uppala@gmail.com}     
+        {\underline{abhinav.uppala@gmail.com}} $|$ \href{https://www.linkedin.com/in/abhinav-uppala/}
+        {\underline{linkedin.com/in/abhinav-uppala}} $|$
+    \href{https://github.com/abhinavuppala}{\underline{github.com/abhinavuppala}}
+\end{center}
+
+% %-----------SUMMARY-----------
+% Not necessary, just restating skills again
+
+% \section{Summary}
+%  \begin{itemize}[leftmargin=0.15in, label={}]
+%     \small{\item{
+%      Ambitious \textbf{computer science student} and \textbf{undergraduate researcher} at UC Irvine (Class of 2027) looking for Summer 2025 internships \& co-ops. 2+ years experience in \textbf{full-stack development} and \textbf{machine learning}, using languages/frameworks like \textbf{Python, React, Flask, PyTorch/Tensorflow}, and more. Passionate about problem-solving and innovation.
+%     }}
+%  \end{itemize}
+
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University of California, Irvine}{Irvine, CA}
+      {Bachelor of Science - Computer Science}{2023 - 2027}
+      \resumeItemListStart
+        \resumeItem{GPA: 3.7/4.0, Dean's Honor List, Undergraduate Research}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+  \resumeSubheading
+      {Full Stack Engineer Intern}{Jul. 2025 - Present}
+      {N2N Services Inc.}{Duluth, GA (Remote)}
+      \resumeItemListStart
+        % \resumeItem{Implemented and maintained a no-code client-facing API creation tool using Java and Spring, enabling secure enterprise integration for X clients handling Y million API calls per month.}
+        \resumeItem{Implemented and maintained a no-code client-facing API creation tool using Java, Spring, Redis and MySQL.}
+        \resumeItem{Migrated JavaScript jQuery-based application pages into Vue.js components, improving maintainability, reducing code complexity, and enabling faster feature development.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Applied ML Researcher}{Aug. 2024 - Present}
+      {UC Irvine Health SciTech Group}{Irvine, CA}
+      \resumeItemListStart
+        \resumeItem{Developed a modular no-code data pipeline using Python and LLM agents for preprocessing, analyzing, and visualizing any kind of data, implementing tree-of-thought reasoning with planning, executing, and reflection.}
+        \resumeItem{Utilized pipeline to calculate heart-rate variability statistics via natural language prompts, providing valuable insight into a patient's nervous system health or recovery.}
+      \resumeItemListEnd
+
+    % \resumeSubheading
+    %   {STEM Instructor}{Jan. 2024 - Present}
+    %   {Kumon}{Irvine, CA}
+    %   \resumeItemListStart
+    %     \resumeItem{Taught over 100+ students grade 1-12 math \& writing through personalized lesson plans \& problem sets.}
+    %     \resumeItem{Managed homework preparation and grading for myself and other instructors.}
+    %   \resumeItemListEnd
+
+    \resumeSubheading
+      {Coding Instructor}{Jan. 2023 - Aug. 2023}
+      {Code Ninjas}{Folsom, CA}
+      \resumeItemListStart
+        \resumeItem{Mentored over 200 students in game development curriculum using Python, JavaScript, Unity/C\#, and Lua.}
+        \resumeItem{Led the Python Club, which taught 10+ students competitive programming concepts in Python.}
+    \resumeItemListEnd
+    
+    \resumeSubheading
+      {Software Engineering Intern}{Jun. 2022 - Aug. 2022}
+      {Intel Corporation}{Folsom, CA}
+      \resumeItemListStart
+        \resumeItem{Developed a system management portal using Python, consolidating diagnostics for 100+ test benches running GPU benchmarking software in more than 5 Intel offices across the U.S. to allow continuous system monitoring.}
+        \resumeItem{Reduced downtime by 75\% by building a CLI to automate crash detection and auto-rebooting recovery workflows.}
+      \resumeItemListEnd
+
+      %  \resumeSubheading
+      % {Python Instructor}{Dec. 2020 - Feb. 2021}
+      % {Suvidha International Foundation}{Remote}
+      % \resumeItemListStart
+      %   \resumeItem{Volunteered at non-profit to teach Python basics to 14 inbound college students in India through Zoom.}
+      %   \resumeItem{Prepared 10 weeks of engaging Python curriculum from scratch, including several interactive slideshows \& projects.}
+      % \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+
+        \resumeProjectHeading
+          {\textbf{\href{https://github.com/abhinavuppala/TelescopeML}{\underline{TelescopeML}}} $|$ \emph{Tensorflow, Scikit-learn, Streamlit, Pandas, Numpy}}{}
+          \resumeItemListStart
+            \resumeItem{Implemented unsupervised learning techniques with PyTorch to cluster and analyze brown dwarf spectra.}
+            \resumeItem{Developed Streamlit web demo showcasing models, allowing users to train, visualize, upload and save models.}
+            \resumeItem{Contributed to open-source project \href{https://github.com/EhsanGharibNezhad/TelescopeML}{\underline{TelescopeML}} as an alternative to existing CNN model, in a 1 week deadline.}
+          \resumeItemListEnd
+    
+        \resumeProjectHeading
+            {\textbf{\href{https://github.com/kylej21/CropGuard}{\underline{Crop Guard}}} $|$ \emph{React.js, FastAPI, PostgreSQL, TypeScript, Next.js, PyTorch, Tailwind}}{}
+          \resumeItemListStart
+            \resumeItem{Collaborated on fullstack web app that classifies plant diseases given an image using a fine-tuned ResNet, and provides users with descriptions \& treatments for these diseases with Google Gemini-1.5 API.}
+            \resumeItem{Implemented user login using OAuth 2.0 and data visualization with historical data, revealing long-term trends.}
+          \resumeItemListEnd
+          
+      \resumeProjectHeading
+          {\textbf{\href{https://github.com/kylej21/DiffusionEmojiGen}{\underline{Diffusion Emoji Generator}}} $|$ \emph{React.js, FastAPI, TypeScript, Next.js, PyTorch, Tailwind}}{}
+          \resumeItemListStart
+            \resumeItem{Utilized a fine-tuned open-source PyTorch diffusion model and sentence transformer to support a custom text-to-emoji generation pipeline, training it on 3k+ emojis to optimize accuracy.}
+            \resumeItem{Developed a Next.js web app with REST API endpoints to minimize latency through asynchronous functions.}
+          \resumeItemListEnd
+
+        \resumeProjectHeading
+            {\textbf{\href{https://github.com/abhinavuppala/SongHangman}{\underline{Song Hangman}}} $|$ \emph{Flask, JavaScript, Bootstrap, HTML/CSS}}{}
+          \resumeItemListStart
+            \resumeItem{Deployed fullstack web app where users can play hangman with songs from chosen artists using Spotify's web API.}
+            \resumeItem{Implemented responsive UI, OAuth 2.0, and utilized cookies to cache API results for over 80\% faster load times.}
+          \resumeItemListEnd
+          
+        % \resumeProjectHeading
+        %   {\textbf{\href{https://github.com/abhinavuppala/GameOff2021}{\underline{Glitchshot \arrowHyperlink}}} $|$ \emph{Unity, C\#}}{Nov. 2021}
+        %   \resumeItemListStart
+        %     \resumeItem{Developed a 3D shooter game where glitches like rubber-banding or wall-clipping become a core mechanic.}
+        %     \resumeItem{Placed in the top 50\% of games in Game Off 2021, a month-long competition, even though I only had 1 week.}
+        %   \resumeItemListEnd
+          
+    \resumeSubHeadingListEnd
+
+
+%-----------PROGRAMMING SKILLS-----------
+\section{Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Programming Languages}{: Python, JavaScript, C++, TypeScript, Java, SQL, HTML/CSS} \\
+     \textbf{Frameworks}{: React.js, FastAPI, Spring, Vue.js, Git, Tailwind, PyTorch, pandas, Flask, jQuery, REST APIs, LLMs} \\
+     \textbf{Tools}{: AWS (EC2, Lambda, S3, DynamoDB), PostgreSQL, Docker, NoSQL, Redis, MySQL, Git, Bash, Linux}
+    }}
+ \end{itemize}
+
+
+%-----------Other-----------
+%\section{About Me}
+% \begin{itemize}[leftmargin=0.15in, label={}]
+%    \small{\item{
+%     \textbf{Interests}{: Video Games, Cooking, Music, Weightlifting, Traveling} \\
+%     \textbf{U.S. Citizen}{}
+%    }
+%    }
+% \end{itemize}
+
+
+
+%-------------------------------------------
+\end{document}
