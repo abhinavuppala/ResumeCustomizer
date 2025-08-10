@@ -1,34 +1,107 @@
-from fastapi import FastAPI, Form
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi import FastAPI, Form, HTTPException
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+import redis
+import hashlib
+import asyncio
+
+import os
+import sys
+import json
+import shutil
+from dotenv import load_dotenv
 
 from resumecompiler.construct_latex import compile_latex, compile_latex_async, construct_latex_resume
 from resumecompiler.resume_field_populator import DefaultResumeFieldPopulator, AIResumeFieldPopulator
-import os
-import sys
+import tasks
 
 
 app = FastAPI()
 
-@app.post("/tailored_resume/")
-async def tailored_resume(
-    job_info: str = Form(...)
-):
-    # Generate the LaTeX file
-    tex_file_path = construct_latex_resume(
-        AIResumeFieldPopulator(),
-        job_info=job_info
-    )
+r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
-    # Compile to PDF
-    # on windows async subprocess is not supported
-    # so unfortunately this becomes a blocking operation
-    if sys.platform.startswith("win"):
-        compile_latex(tex_file_path, "build")
-    else:
-        await compile_latex_async(tex_file_path, "build")
+# Test Redis connection
+try:
+    r.ping()
+    print("Connected to Redis!")
+except ConnectionError:
+    print("Failed to connect to Redis.")
 
-    name = os.path.splitext(os.path.basename(tex_file_path))[0]
-    pdf_path = os.path.join("build", name, f"{name}.pdf")
 
-    # Return the PDF file as a download
-    return FileResponse(pdf_path, media_type="application/pdf", filename=os.path.basename(pdf_path))
+
+@app.post("/resume")
+async def generate_resume(job_info: str = Form(...)) -> StreamingResponse:
+    """
+    Generate tailored PDF resume from the job info.
+    Saves the PDF in local memory, and return key to retrieve it 
+    through GET /resume/{key} endpoint
+    """
+    def sse_response(event, data):
+        return f'event: {event}\ndata: {data}\n\n'
+
+    async def event_generator():
+
+        # 1. generate unique primary key from job_info
+        key = hashlib.sha256(job_info.encode('utf-8')).hexdigest()
+        yield sse_response('progress', 'Checking cache...')
+
+        # 2. check if key exists in redis
+        if r.exists(key):
+            yield sse_response('done', json.dumps({'key': key}))
+            return
+
+        # 3. generate .tex file using AI
+        yield sse_response('progress', 'Generating AI resume...')
+        tex_file_path = construct_latex_resume(
+            AIResumeFieldPopulator(),
+            job_info=job_info
+        )
+
+        # 4. compile to PDF (blocking on windows)
+        yield sse_response('progress', 'Compiling LaTeX to PDF...')
+        try:
+            if sys.platform.startswith("win"):
+                compile_latex(tex_file_path, "build")
+            else:
+                await compile_latex_async(tex_file_path, "build")
+        except Exception as e:
+            yield sse_response('error', f'Failed to compile LaTeX: {e}')
+            return
+
+        name = os.path.splitext(os.path.basename(tex_file_path))[0]
+        pdf_path = os.path.join("build", name, f"{name}.pdf")
+        dir_path = os.path.join("build", name)
+
+        # Delete the .tex file
+        try:
+            os.remove(tex_file_path)
+            yield sse_response('progress', 'Cleaned up intermediate files.')
+        except Exception as e:
+            yield sse_response('progress', f'Warning: Could not delete .tex file: {e}')
+
+        # 5. store PDF path in redis for 5 mins
+        ttl_seconds = 300
+        r.set(key, json.dumps({'pdf_path': pdf_path}), ex=ttl_seconds)
+        tasks.cleanup_directory.apply_async(args=[dir_path], countdown=ttl_seconds+1)
+
+        # 6. return the key
+        yield sse_response('done', json.dumps({'key': key}))
+
+    return StreamingResponse(event_generator(), media_type='text/event-stream')
+
+
+
+@app.get("/resume/{key}")
+async def get_resume(key: str) -> FileResponse:
+    """
+    Get a previously generated resume using key as PDF FileResponse
+    """
+    cached = r.get(key)
+    if not cached:
+        raise HTTPException(status_code=404, detail="Resume not found")
+    
+    # check PDF path exists, then return it through FileResponse
+    data = json.loads(cached)
+    pdf_path = data.get('pdf_path')
+    if not pdf_path or not os.path.exists(pdf_path):
+        raise HTTPException(status_code=404, detail="PDF file not found")
+    return FileResponse(pdf_path, media_type='application/pdf', filename=os.path.basename(pdf_path))

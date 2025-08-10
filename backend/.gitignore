@@ -7,6 +7,10 @@ tex/*
 # environment variables
 .env
 
+# Any PDF or latex files that aren't in static/
+*.pdf
+*.tex
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 resumecompiler/__pycache__/
