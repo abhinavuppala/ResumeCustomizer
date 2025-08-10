@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from abc import ABC, abstractmethod
+
 
 # ==================================================
 # ================== JSON Schemas ==================
@@ -36,6 +38,16 @@ class Resume(BaseModel):
     experiences: list[Experience]
     projects: list[Project]
     skills: Skills
+
+
+class ChangeLog(BaseModel):
+    before: str
+    after: str
+    reason: str
+
+class ResumeCustomizationResult(BaseModel):
+    resume: Resume
+    changelog: list[ChangeLog]
 
 
 # ==================================================
@@ -140,3 +152,32 @@ class ComponentCompiler:
             f"\\textbf{{{section}}}{{: {items}}}" for section, items in skills.sections.items()
         )
         return SKILLS_LATEX.format(sections_str=sections_str)
+    
+
+# ==================================================
+# =================== Interfaces ===================
+# ==================================================
+
+
+class BaseResumeFieldPopulator(ABC):
+    @abstractmethod
+    def get_resume_data(self, job_info: str) -> Resume:
+        pass
+
+    @abstractmethod
+    def name(self) -> str:
+        pass
+
+
+class BaseAIInterface(ABC):
+    @abstractmethod
+    def generate_customized_resume(
+        self,
+        base_resume: Resume,
+        job_info: str
+    ) -> ResumeCustomizationResult:
+        pass
+
+    @abstractmethod
+    def name(self) -> str:
+        pass

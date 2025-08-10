@@ -1,120 +1,52 @@
-from abc import ABC, abstractmethod
+import os
+
 from resumecompiler.models import *
-
-
-class BaseResumeFieldPopulator(ABC):
-    @abstractmethod
-    def get_resume_data(self) -> Resume:
-        pass
+from resumecompiler.claude_interface import AnthropicAIInterface
 
 
 class DefaultResumeFieldPopulator(BaseResumeFieldPopulator):
-    def get_resume_data(self) -> Resume:
+    def get_resume_data(self, job_info: str) -> Resume:
         """
         Get Abhinav Uppala default resume info (as of 8-9-25)
+        Does NOT customize it to the job info
         """
-        education = Education(
-            university="University of California, Irvine",
-            location="Irvine, CA",
-            degree="Bachelor of Science - Computer Science",
-            date="2023 - 2027",
-            bullets=[
-                "GPA: 3.7/4.0, Dean's Honor List, Undergraduate Research"
-            ]
-        )
-
-        experiences = [
-            Experience(
-                title="Full Stack Developer Intern",
-                date="Jul. 2025 - Present",
-                company="N2N Services Inc.",
-                location="Duluth, GA (Remote)",
-                bullets=[
-                    "Implemented and maintained a no-code client-facing API creation tool using Java, Spring, Redis and MySQL.",
-                    "Migrated JavaScript jQuery-based application pages into Vue.js components, improving maintainability, reducing code complexity, and enabling faster feature development."
-                ]
-            ),
-            Experience(
-                title="Applied ML Researcher",
-                date="Aug. 2024 - Present",
-                company="UC Irvine Health SciTech Group",
-                location="Irvine, CA",
-                bullets=[
-                    "Developed a modular no-code data pipeline using Python and LLM agents for preprocessing, analyzing, and visualizing any kind of data, implementing tree-of-thought reasoning with planning, executing, and reflection.",
-                    "Utilized pipeline to calculate heart-rate variability statistics via natural language prompts, providing valuable insight into a patient's nervous system health or recovery."
-                ]
-            ),
-            Experience(
-                title="Coding Instructor",
-                date="Jan. 2023 - Aug. 2023",
-                company="Code Ninjas",
-                location="Folsom, CA",
-                bullets=[
-                    "Mentored over 200 students in game development curriculum using Python, JavaScript, Unity/C\#, and Lua.",
-                    "Led the Python Club, which taught 10+ students competitive programming concepts in Python."
-                ]
-            ),
-            Experience(
-                title="Software Engineering Intern",
-                date="Jun. 2022 - Aug. 2022",
-                company="Intel Corporation",
-                location="Folsom, CA",
-                bullets=[
-                    "Developed a system management portal using Python, consolidating diagnostics for 100+ test benches running GPU benchmarking software in more than 5 Intel offices across the U.S. to allow continuous system monitoring.",
-                    "Reduced downtime by 75\% by building a CLI to automate crash detection and auto-rebooting recovery workflows."
-                ]
-            ),
-        ]
-
-        projects = [
-            Project(
-                title="\\href{https://github.com/abhinavuppala/TelescopeML}{\\underline{TelescopeML}}",
-                skills="Tensorflow, Scikit-learn, Streamlit, Pandas, Numpy",
-                bullets=[
-                    "Implemented unsupervised learning techniques with PyTorch to cluster and analyze brown dwarf spectra.",
-                    "Developed Streamlit web demo showcasing models, allowing users to train, visualize, upload and save models.",
-                    "Contributed to open-source project \\href{https://github.com/EhsanGharibNezhad/TelescopeML}{\\underline{TelescopeML}} as an alternative to existing CNN model, in a 1 week deadline."
-                ]
-            ),
-            Project(
-                title="\\href{https://github.com/kylej21/CropGuard}{\\underline{Crop Guard}}",
-                skills="React.js, FastAPI, PostgreSQL, TypeScript, Next.js, PyTorch, Tailwind",
-                bullets=[
-                    "Collaborated on fullstack web app that classifies plant diseases given an image using a fine-tuned ResNet, and provides users with descriptions \& treatments for these diseases with Google Gemini-1.5 API.",
-                    "Implemented user login using OAuth 2.0 and data visualization with historical data, revealing long-term trends."
-                ]
-            ),
-            Project(
-                title="\\href{https://github.com/kylej21/DiffusionEmojiGen}{\\underline{Diffusion Emoji Generator}}",
-                skills="React.js, FastAPI, TypeScript, Next.js, PyTorch, Tailwind",
-                bullets=[
-                    "Utilized a fine-tuned open-source PyTorch diffusion model and sentence transformer to support a custom text-to-emoji generation pipeline, training it on 3k+ emojis to optimize accuracy.",
-                    "Developed a Next.js web app with REST API endpoints to minimize latency through asynchronous functions."
-                ]
-            ),
-            Project(
-                title="\\href{https://github.com/abhinavuppala/SongHangman}{\\underline{Song Hangman}}",
-                skills="Flask, JavaScript, Bootstrap, HTML/CSS",
-                bullets=[
-                    "Deployed fullstack web app where users can play hangman with songs from chosen artists using Spotify's web API.",
-                    "Implemented responsive UI, OAuth 2.0, and utilized cookies to cache API results for over 80\% faster load times."
-                ]
-            ),
-        ]
-
-        skills = Skills(
-            sections={
-                "Programming Languages": "Python, JavaScript, C++, TypeScript, Java, SQL, HTML/CSS",
-                "Frameworks": "React.js, FastAPI, Spring, Vue.js, Git, Tailwind, PyTorch, pandas, Flask, jQuery, REST APIs, LLMs",
-                "Tools": "AWS (EC2, Lambda, S3, DynamoDB), PostgreSQL, Docker, NoSQL, Redis, MySQL, Git, Bash, Linux"
-            }
-        )
-
-        resume = Resume(
-            education=education,
-            experiences=experiences,
-            projects=projects,
-            skills=skills,
-        )
-
+        with open(os.path.join('static', 'base_resume.json'), 'r') as f:
+            json_str = f.read()
+        resume = Resume.model_validate_json(json_str)
         return resume
+    
+    def name(self) -> str:
+        return "Default Resume Populator"
+    
+
+class AIResumeFieldPopulator(BaseResumeFieldPopulator):
+    def get_resume_data(self, job_info: str, ai_interface: BaseAIInterface = AnthropicAIInterface()):
+        """
+        Generates a tailored version of Abhinav's Resume (8-9-25) to the job info.
+        Also prints out a log of the changes made to the resume by the LLM
+        """
+        with open(os.path.join('static', 'base_resume.json'), 'r') as f:
+            json_str = f.read()
+        base_resume = Resume.model_validate_json(json_str)
+
+        # use injected AI interface to generate tailored resume
+        result: ResumeCustomizationResult = ai_interface.generate_customized_resume(base_resume, job_info)
+        changelog = result.changelog
+        tailored_resume = result.resume
+
+        # print changes made if any
+        if not changelog:
+            print("No changes made.")
+            return tailored_resume
+        
+        print("Changes made:\n")
+        for change in changelog:
+            print(f">> ORIGINAL: {change.before}")
+            print(f">> AFTER:    {change.after}")
+            print(f">> REASON:   {change.reason}")
+            print()
+        return tailored_resume
+
+    
+    def name(self):
+        return "AI Resume Populator"
