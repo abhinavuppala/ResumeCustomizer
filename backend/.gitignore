@@ -6,3 +6,57 @@ tex/*
 
 # environment variables
 .env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+resumecompiler/__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# PyInstaller
+*.manifest
+*.spec
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uvicorn / Gunicorn logs
+*.log
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# VS Code / PyCharm
+.vscode/
+.idea/

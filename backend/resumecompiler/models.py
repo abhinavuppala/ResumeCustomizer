@@ -111,7 +111,7 @@ class ComponentCompiler:
             degree=education.degree,
             date=education.date,
             bullets_str="\n".join(
-                "\\resumeItem{bullet}" for bullet in education.bullets
+                "\\resumeItem{"+bullet+'}' for bullet in education.bullets
             )
         )
 

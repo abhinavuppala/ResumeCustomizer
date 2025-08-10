@@ -2,6 +2,7 @@ import subprocess
 import os
 from pathlib import Path
 from datetime import datetime
+import asyncio
 
 from resumecompiler.resume_field_populator import BaseResumeFieldPopulator
 from resumecompiler.models import *
@@ -25,7 +26,27 @@ def compile_latex(tex_path: str, output_dir: str = 'build') -> None:
         stderr=subprocess.DEVNULL,
         check=True
     )
-    print("Output saved at main.pdf.\n")
+    print(f"Output saved at {name}.pdf.\n")
+
+
+async def compile_latex_async(tex_path: str, output_dir: str = 'build') -> None:
+    """
+    Asynchronously compile the latex at the given path to a PDF using pdflatex.
+    """
+    name = Path(tex_path).stem
+    output_dir = os.path.join(output_dir, name)
+    os.makedirs(output_dir, exist_ok=True)
+
+    print(f"Compiling {tex_path} -> PDF (async)")
+    process = await asyncio.create_subprocess_exec(
+        "pdflatex", "-output-directory", output_dir, tex_path,
+        stdout=asyncio.subprocess.DEVNULL,
+        stderr=asyncio.subprocess.DEVNULL
+    )
+    await process.communicate()
+    if process.returncode != 0:
+        raise RuntimeError(f"pdflatex failed with exit code {process.returncode}")
+    print(f"Output saved at {name}.pdf.\n")
 
 
 def construct_latex_resume(
