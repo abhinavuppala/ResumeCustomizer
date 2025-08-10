@@ -1,0 +1,2 @@
+# Ignore all TeX files in language stats
+*.tex linguist-detectable=false

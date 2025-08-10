@@ -68,6 +68,7 @@ def construct_latex_resume(
     
     # write to new tex file
     result_path = os.path.join(".", "tex", output_filename)
+    os.makedirs(os.path.join(".", "tex"), exist_ok=True)
     with open(result_path, "w") as f:
         f.write(template_str)
     
