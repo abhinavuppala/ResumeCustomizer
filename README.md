@@ -19,3 +19,9 @@
 5. In static/template.tex, scroll to the bottom where you'll see the section for the header. Edit these to show your name, email, phone number, etc. Add/remove any fields you want/don't want, just make sure it's seperated by $|$
 6. Create a python virtual environment and `pip install -r requirements.txt`
 7. Run `python main.py`
+
+
+## Features to Add
+
+- Containerize backend so it can be run on computer startup locally
+- Create frontend to more easily upload the job description
