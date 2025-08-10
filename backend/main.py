@@ -17,7 +17,9 @@ import tasks
 
 app = FastAPI()
 
-r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+load_dotenv()
+assert os.getenv("REDIS_URL"), "Missing REDIS_URL environment variable"
+r = redis.Redis.from_url(os.getenv("REDIS_URL"))
 
 # Test Redis connection
 try:

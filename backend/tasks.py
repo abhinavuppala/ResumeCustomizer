@@ -1,11 +1,14 @@
 from celery import Celery
 import shutil
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
+assert os.getenv("REDIS_URL"), "Missing REDIS_URL environment variable"
 celery_app = Celery(
     "worker",
-    broker="redis://localhost:6379/0",
-    backend="redis://localhost:6379/0"
+    broker=os.getenv("REDIS_URL"),
+    backend=os.getenv("REDIS_URL")
 )
 
 @celery_app.task

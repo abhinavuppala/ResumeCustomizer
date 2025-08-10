@@ -1,5 +1,63 @@
 # Resume Customizer Package
 
+I can't seem to land a damn internship so I made this in hopes that it would help. To be honest it probably won't but it's a good learning experience nonetheless
+
+## Technologies Used
+
+- Python
+- FastAPI
+- Redis
+- Celery
+- Anthropic API
+- LaTeX
+
+
+# How to Run
+
+## Requirements
+
+- Docker
+  - Must come with Docker Compose
+- An existing resume
+  - No specific format required but you need to have sections for education, experience, projects, and skills. You will have to convert this to a specific JSON format, which you can just ask an LLM to do for you or do yourself. (I plan to add a feature for this at some point)
+- Git (obviously)
+
+
+## Instructions
+
+1. Clone repo to local machine and enter backend/ directory
+2. Create a .env file with:
+   1. `REDIS_URL=redis://redis:6379/0`
+   2. `ANTHROPIC_API_KEY=<your_api_key>`
+3. To build and start the containers first time:
+   1. `docker compose up --build`
+4. To run containers after they've been build:
+   1. `docker compose up`
+5. To stop the containers:
+   1. `docker compose down`
+
+
+This will run our server on port 8080. It has the following endpoints:
+
+- `POST /resume`: Takes job_info in body (string), and returns a key which we can use with the GET to download a tailored PDF resume to the given job_info
+  - It returns a StreamingResponse, giving constant text updates of the process until the final one with the key.
+  - Any POSTs with the same job_info for the next 5 minutes will return the cached key rather than generating another resume.
+- `GET /resume/{key}`: Takes the string key, and returns a FileResponse PDF with the stored resume
+  - This resume lives for 5 minutes after the original POST in local memory. Any subsequent GETs in that time will return the same resume.
+
+
+# Features to Add
+
+- Containerize backend for ease of use
+- Create & deploy a frontend
+- Possibly - deploy a backend where users can use their own API key & select model type, so they don't have to run a container locally
+
+
+
+# Optional - Run without Docker Compose
+
+As of 8-10-25
+
 ## Requirements
 
 - An existing resume
@@ -11,13 +69,11 @@
 - Docker (or Redis installed another way)
 
 
-## Instructions
-
 ### Setup
 
 1. Clone the repo to your local machine
 2. Enter backend/ directory
-3. Add key ANTHROPIC_API_KEY to `.env`
+3. Add key ANTHROPIC_API_KEY to `.env`, and `REDIS_URL=redis://redis:6379/0`
 4. In static/base_resume.json, replace the fields with your own resume's data. As mentioned earlier you can do this manually or use an LLM.
 5. In static/template.tex, scroll to the bottom where you'll see the section for the header. Edit these to show your name, email, phone number, etc. Add/remove any fields you want/don't want, just make sure it's seperated by $|$
 6. Create a python virtual environment and `pip install -r requirements.txt`
@@ -35,10 +91,3 @@
 4. To test, you can use curl. Swagger UI will not work because POST /resume returns a StreamingResponse (gives us constant updates on progress).
    1. Give a job description & return a key -> `curl -N -X POST http://127.0.0.1:8080/resume -F "job_info=<your job description here>"`
    2. Give a key & return a PDF file download -> `curl -X GET http://127.0.0.1:8080/resume/<your_key> --output resume.pdf`
-
-
-## Features to Add
-
-- Containerize backend for ease of use
-- Create & deploy a frontend
-- Possibly - deploy a backend where users can use their own API key & select model type, so they don't have to run a container locally
