@@ -1,5 +1,6 @@
 import os
-from resumecompiler.construct_latex import compile_latex
+from resumecompiler.construct_latex import compile_latex, construct_latex_resume
+from resumecompiler.resume_field_populator import DefaultResumeFieldPopulator
 
-
-compile_latex(os.path.join("static", "main.tex"), "build")
+construct_latex_resume(DefaultResumeFieldPopulator(), "main.tex")
+compile_latex(os.path.join("tex", "main.tex"), "build")

@@ -31,6 +31,13 @@ class Skills(BaseModel):
     sections: dict[str, str]
 
 
+class Resume(BaseModel):
+    education: Education
+    experiences: list[Experience]
+    projects: list[Project]
+    skills: Skills
+
+
 # ==================================================
 # ============= Latex String Templates =============
 # ==================================================
@@ -59,7 +66,7 @@ EXPERIENCE_LATEX = """
 
 PROJECT_LATEX = """
 \\resumeProjectHeading
-  {{\\textbf{{{title}}}} $|$ \\emph{{{skills}}}}}{}
+  {{\\textbf{{{title}}} $|$ \\emph{{{skills}}}}}{{}}
   \\resumeItemListStart
     {bullets_str}
   \\resumeItemListEnd
@@ -79,7 +86,7 @@ SKILLS_LATEX = """
 # ==================================================
 
 
-class Compiler:
+class ComponentCompiler:
     
     @staticmethod
     def compile_education(education: Education) -> str:
