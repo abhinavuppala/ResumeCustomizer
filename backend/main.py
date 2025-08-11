@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Form, HTTPException
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 import redis
 import hashlib
 import asyncio
@@ -9,6 +10,7 @@ import sys
 import json
 import shutil
 from dotenv import load_dotenv
+import time
 
 from resumecompiler.construct_latex import compile_latex, compile_latex_async, construct_latex_resume
 from resumecompiler.resume_field_populator import DefaultResumeFieldPopulator, AIResumeFieldPopulator
@@ -16,6 +18,14 @@ import tasks
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 load_dotenv()
 assert os.getenv("REDIS_URL"), "Missing REDIS_URL environment variable"
@@ -38,7 +48,13 @@ async def generate_resume(job_info: str = Form(...)) -> StreamingResponse:
     through GET /resume/{key} endpoint
     """
     def sse_response(event, data):
-        return f'event: {event}\ndata: {data}\n\n'
+        # If data is multiline, prefix each line with 'data: '
+        if isinstance(data, str):
+            data_lines = data.splitlines()
+            data_field = '\n'.join(f'data: {line}' for line in data_lines)
+        else:
+            data_field = f'data: {data}'
+        return f"event: {event}\n{data_field}\n\n"
 
     async def event_generator():
 
@@ -86,6 +102,16 @@ async def generate_resume(job_info: str = Form(...)) -> StreamingResponse:
             yield sse_response('progress', 'Cleaned up intermediate files.')
         except Exception as e:
             yield sse_response('progress', f'Warning: Could not delete .tex file: {e}')
+
+        # Wait until PDF exists (with a timeout)
+        yield sse_response('progress', f'Waiting for PDF file to fully load.')
+        timeout = 5  # seconds
+        start = time.time()
+        while not os.path.exists(pdf_path):
+            if time.time() - start > timeout:
+                yield sse_response('error', 'PDF file was not created in time.')
+                return
+            time.sleep(0.1)
 
         # 5. store PDF path in redis for 5 mins
         ttl_seconds = 300
