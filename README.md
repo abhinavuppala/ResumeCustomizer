@@ -38,6 +38,14 @@ I can't seem to land a damn internship so I made this in hopes that it would hel
 
 You should also be able to run it through Docker Desktop.
 
+Then to host the frontend:
+
+1. Navigate to frontend/ in a different terminal
+2. Run `npm run dev`, and go to localhost:3000
+
+This runs locally and works better for personal use.
+I haven't hosted it yet since I need to implement a way for other users to add their own API keys when making requests, as I don't have the kind of money to let people use my API key.
+
 
 This will run our server on port 8080. It has the following endpoints:
 
