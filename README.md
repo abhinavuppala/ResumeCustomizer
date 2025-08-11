@@ -31,6 +31,7 @@ I can't seem to land a damn internship so I made this in hopes that it would hel
    2. `ANTHROPIC_API_KEY=<your_api_key>`
 3. To build and start the containers first time:
    1. `docker compose up --build`
+   2. This will take a few mins probably, since it needs to install latex and it's a pretty big application. Just chill for a few mins I guess.
 4. To run containers after they've been build:
    1. `docker compose up`
 5. To stop the containers:
