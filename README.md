@@ -26,15 +26,17 @@ I can't seem to land a damn internship so I made this in hopes that it would hel
 ## Instructions
 
 1. Clone repo to local machine and enter backend/ directory
-2. Create a .env file with:
+2. In static/base_resume.json, replace the fields with your own resume's data. As mentioned earlier you can do this manually or use an LLM.
+3. In static/template.tex, scroll to the bottom where you'll see the section for the header. Edit these to show your name, email, phone number, etc. Add/remove any fields you want/don't want, just make sure it's seperated by $|$. Or just copy this section from your resume.
+4. Create a .env file with:
    1. `REDIS_URL=redis://redis:6379/0`
    2. `ANTHROPIC_API_KEY=<your_api_key>`
-3. To build and start the containers first time:
+5. To build and start the containers first time:
    1. `docker compose up --build`
    2. This will take a few mins probably, since it needs to install latex and it's a pretty big application. Just chill for a few mins I guess.
-4. To run containers after they've been build:
+6. To run containers after they've been build:
    1. `docker compose up`
-5. To stop the containers:
+7. To stop the containers:
    1. `docker compose down`
 
 You should also be able to run it through Docker Desktop.
