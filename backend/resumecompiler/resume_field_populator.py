@@ -5,7 +5,7 @@ from resumecompiler.claude_interface import AnthropicAIInterface
 
 
 class DefaultResumeFieldPopulator(BaseResumeFieldPopulator):
-    def get_resume_data(self, job_info: str) -> Resume:
+    def get_resume_data(self, job_info: str) -> tuple[Resume, list[ChangeLog]]:
         """
         Get Abhinav Uppala default resume info (as of 8-9-25)
         Does NOT customize it to the job info
@@ -20,7 +20,11 @@ class DefaultResumeFieldPopulator(BaseResumeFieldPopulator):
     
 
 class AIResumeFieldPopulator(BaseResumeFieldPopulator):
-    def get_resume_data(self, job_info: str, ai_interface: BaseAIInterface = AnthropicAIInterface()):
+    def get_resume_data(
+            self,
+            job_info: str,
+            ai_interface: BaseAIInterface = AnthropicAIInterface()
+        ) -> tuple[Resume, list[ChangeLog]]:
         """
         Generates a tailored version of Abhinav's Resume (8-9-25) to the job info.
         Also prints out a log of the changes made to the resume by the LLM
@@ -37,7 +41,7 @@ class AIResumeFieldPopulator(BaseResumeFieldPopulator):
         # print changes made if any
         if not changelog:
             print("No changes made.")
-            return tailored_resume
+            return tailored_resume, []
         
         print("Changes made:\n")
         for change in changelog:
@@ -45,8 +49,7 @@ class AIResumeFieldPopulator(BaseResumeFieldPopulator):
             print(f">> AFTER:    {change.after}")
             print(f">> REASON:   {change.reason}")
             print()
-        return tailored_resume
-
+        return tailored_resume, changelog
     
     def name(self):
         return "AI Resume Populator"

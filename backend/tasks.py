@@ -21,7 +21,3 @@ def cleanup_directory(dir_path: str):
         print(f"Deleted directory: {dir_path}")
     else:
         print(f"Directory not found: {dir_path}")
-
-@celery_app.task
-def add(x, y):
-    return x + y

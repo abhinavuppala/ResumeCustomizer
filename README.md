@@ -36,6 +36,8 @@ I can't seem to land a damn internship so I made this in hopes that it would hel
 5. To stop the containers:
    1. `docker compose down`
 
+You should also be able to run it through Docker Desktop.
+
 
 This will run our server on port 8080. It has the following endpoints:
 
@@ -44,6 +46,12 @@ This will run our server on port 8080. It has the following endpoints:
   - Any POSTs with the same job_info for the next 5 minutes will return the cached key rather than generating another resume.
 - `GET /resume/{key}`: Takes the string key, and returns a FileResponse PDF with the stored resume
   - This resume lives for 5 minutes after the original POST in local memory. Any subsequent GETs in that time will return the same resume.
+
+
+Test it with these commands:
+
+- `curl -N -X POST http://127.0.0.1:8080/resume -F "job_info=<job_info>"`
+- `curl -X GET http://127.0.0.1:8080/resume/<your_key> --output resume.pdf`
 
 
 # Features to Add

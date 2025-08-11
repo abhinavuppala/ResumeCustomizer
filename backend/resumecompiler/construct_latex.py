@@ -53,12 +53,12 @@ def construct_latex_resume(
         field_populator: BaseResumeFieldPopulator,
         job_info: str = "No job info given. Assume it's a generic SWE internship.",
         output_filename: str = ""
-    ) -> str:
+    ) -> tuple[str, list[ChangeLog]]:
     """
     Construct a .tex file of a custom resume from a template & Resume object
     """
     print(f"Populating resume data from {field_populator.name()}...")
-    resume: Resume = field_populator.get_resume_data(job_info)
+    resume, changelog = field_populator.get_resume_data(job_info)
     print(f"Resume data populated.\n")
 
     # by default use current time to add to filename
@@ -94,4 +94,4 @@ def construct_latex_resume(
         f.write(template_str)
     
     print(f"Saved latex resume to {result_path}.\n")
-    return result_path
+    return result_path, changelog

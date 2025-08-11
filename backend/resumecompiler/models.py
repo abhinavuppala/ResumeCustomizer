@@ -161,7 +161,7 @@ class ComponentCompiler:
 
 class BaseResumeFieldPopulator(ABC):
     @abstractmethod
-    def get_resume_data(self, job_info: str) -> Resume:
+    def get_resume_data(self, job_info: str) -> tuple[Resume, list[ChangeLog]]:
         pass
 
     @abstractmethod

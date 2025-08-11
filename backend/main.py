@@ -53,10 +53,17 @@ async def generate_resume(job_info: str = Form(...)) -> StreamingResponse:
 
         # 3. generate .tex file using AI
         yield sse_response('progress', 'Generating AI resume...')
-        tex_file_path = construct_latex_resume(
+        tex_file_path, changelog = construct_latex_resume(
             AIResumeFieldPopulator(),
             job_info=job_info
         )
+
+        # send changes made in changelog
+        for change in changelog:
+            change_string = f'>> Original: {change.before}\n' \
+                          + f'>> After: {change.after}\n' \
+                          + f'>> Reason: {change.reason}'
+            yield sse_response('progress', change_string)
 
         # 4. compile to PDF (blocking on windows)
         yield sse_response('progress', 'Compiling LaTeX to PDF...')
